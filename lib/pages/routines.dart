@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:nyava_ui/main.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
+import 'package:table_calendar/table_calendar.dart';
+
+import '../components/common.dart';
 
 class RoutinesPage extends StatefulWidget {
   const RoutinesPage({Key? key}) : super(key: key);
@@ -45,8 +46,7 @@ class _RoutinesPageState extends State<RoutinesPage> {
                   daysOfWeekStyle: DaysOfWeekStyle(
                     weekdayStyle: TextStyle(color: Colors.grey.shade500),
                     weekendStyle: TextStyle(color: Colors.grey.shade500),
-                    dowTextFormatter: (date, locale) =>
-                        DateFormat.E(locale).format(date)[0],
+                    dowTextFormatter: (date, locale) => DateFormat.E(locale).format(date)[0],
                   ),
                   calendarStyle: CalendarStyle(
                     cellMargin: const EdgeInsets.all(2),
@@ -73,13 +73,11 @@ class _RoutinesPageState extends State<RoutinesPage> {
                   onDaySelected: (selectedDay, focusedDay) {
                     setState(() {
                       _selected = selectedDay;
-                      _focused =
-                          focusedDay; // update `_focusedDay` here as well
+                      _focused = focusedDay; // update `_focusedDay` here as well
                     });
                   },
                   focusedDay: _focused,
-                  firstDay:
-                      DateTime.now().subtract(const Duration(days: 365 * 10)),
+                  firstDay: DateTime.now().subtract(const Duration(days: 365 * 10)),
                   lastDay: DateTime.now().add(const Duration(days: 365 * 10)),
                 ),
               ),
