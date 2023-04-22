@@ -67,19 +67,12 @@ class TaskItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 25),
         child: Row(
           children: [
-            Container(
-              margin: const EdgeInsets.only(right: 15),
-              decoration: BoxDecoration(
-                color: color,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Padding(
-                padding: EdgeInsets.all(5),
-                child: Icon(
-                  Icons.checklist_rounded,
-                  color: Colors.white,
-                  size: 18,
-                ),
+            BackgroundIcon(
+              color: color,
+              child: const Icon(
+                Icons.checklist_rounded,
+                color: Colors.white,
+                size: 18,
               ),
             ),
             Text(
@@ -96,6 +89,76 @@ class TaskItem extends StatelessWidget {
             )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class RoundedTaskItem extends StatefulWidget {
+  const RoundedTaskItem({Key? key, required this.emoji, required this.title}) : super(key: key);
+  final String emoji;
+  final String title;
+
+  @override
+  State<RoundedTaskItem> createState() => _RoundedTaskItemState();
+}
+
+class _RoundedTaskItemState extends State<RoundedTaskItem> {
+  bool isChecked = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      height: 80,
+      margin: const EdgeInsets.only(bottom: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      decoration: BoxDecoration(
+        color: isChecked ? Colors.grey.shade300 : Colors.white,
+        borderRadius: BorderRadius.circular(25),
+      ),
+      child: Row(
+        children: [
+          BackgroundIcon(
+            color: Colors.grey.shade200,
+            child: Text(
+              widget.emoji,
+              style: const TextStyle(fontSize: 20),
+            ),
+          ),
+          Text(
+            widget.title,
+            style: TextStyle(color: isChecked ? Colors.grey.shade500 : Colors.black),
+          ),
+          const Spacer(),
+          Checkbox(
+            activeColor: Colors.orange,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            value: isChecked,
+            onChanged: (oldValue) => setState(() => isChecked = !isChecked),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BackgroundIcon extends StatelessWidget {
+  const BackgroundIcon({Key? key, required this.color, required this.child}) : super(key: key);
+  final Color color;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(right: 15),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(7),
+        child: child,
       ),
     );
   }
