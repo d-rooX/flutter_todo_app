@@ -33,11 +33,16 @@ class DBProvider {
     );
   }
 
+  DateTime toDate(DateTime dateTime) => DateTime(dateTime.year, dateTime.month, dateTime.day);
+
   // READ
   Future<List<Task>> getTasks(DateTime date) async {
     Database db = await getDatabase();
-    final List<Map<String, dynamic>> tasksMaps =
-        await db.query('tasks', where: "date=?", whereArgs: [date.millisecondsSinceEpoch]);
+    final List<Map<String, dynamic>> tasksMaps = await db.query(
+      'tasks',
+      where: "date=?",
+      whereArgs: [toDate(date).millisecondsSinceEpoch],
+    );
     return tasksMaps.map((taskMap) => Task.fromMap(taskMap)).toList();
   }
 

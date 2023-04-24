@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:nyava_ui/bloc/bloc_exports.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class TaskCalendar extends StatefulWidget {
@@ -11,10 +12,15 @@ class TaskCalendar extends StatefulWidget {
 
 class _TaskCalendarState extends State<TaskCalendar> {
   DateTime _focusedDate = DateTime.now();
-  DateTime _selectedDate = DateTime.now();
+  DateTime? _selectedDate;
 
   @override
   Widget build(BuildContext context) {
+    if (_selectedDate == null) {
+      _focusedDate = context.read<TasksBloc>().state.selectedDay ?? DateTime.now();
+      _selectedDate = _focusedDate;
+    }
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 25),
       padding: const EdgeInsets.all(15),
@@ -64,6 +70,7 @@ class _TaskCalendarState extends State<TaskCalendar> {
           setState(() {
             _selectedDate = selectedDay;
             _focusedDate = focusedDay; // update `_focusedDay` here as well
+            context.read<TasksBloc>().add(RefreshTasks(date: selectedDay));
           });
         },
         focusedDay: _focusedDate,

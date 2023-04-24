@@ -38,6 +38,9 @@ dependencies:
   sqflite: any
   path_provider: any
   intl: any
+  flutter_bloc: any
+  equatable: any
+  flutter_slidable: any
 
 dev_dependencies:
   flutter_test:

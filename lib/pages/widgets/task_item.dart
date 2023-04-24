@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nyava_ui/db/database.dart';
+import 'package:nyava_ui/bloc/bloc_exports.dart';
 
 import '../../db/models/task.dart';
 import 'bg_icon.dart';
@@ -57,15 +57,10 @@ class TaskItem extends StatelessWidget {
   }
 }
 
-class RoundedTaskItem extends StatefulWidget {
+class RoundedTaskItem extends StatelessWidget {
   const RoundedTaskItem(this.task, {Key? key}) : super(key: key);
   final Task task;
 
-  @override
-  State<RoundedTaskItem> createState() => _RoundedTaskItemState();
-}
-
-class _RoundedTaskItemState extends State<RoundedTaskItem> {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
@@ -74,7 +69,7 @@ class _RoundedTaskItemState extends State<RoundedTaskItem> {
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.symmetric(horizontal: 15),
       decoration: BoxDecoration(
-        color: widget.task.isChecked ? Colors.grey.shade300 : Colors.white,
+        color: task.isChecked ? Colors.grey.shade300 : Colors.white,
         borderRadius: BorderRadius.circular(25),
       ),
       child: Row(
@@ -82,22 +77,22 @@ class _RoundedTaskItemState extends State<RoundedTaskItem> {
           BackgroundIcon(
             color: Colors.grey.shade200,
             child: Text(
-              widget.task.emoji,
+              task.emoji,
               style: const TextStyle(fontSize: 20),
             ),
           ),
           Text(
-            widget.task.title,
-            style: TextStyle(color: widget.task.isChecked ? Colors.grey.shade500 : Colors.black),
+            task.title,
+            style: TextStyle(color: task.isChecked ? Colors.grey.shade500 : Colors.black),
           ),
           const Spacer(),
           Checkbox(
             activeColor: Colors.orange,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-            value: widget.task.isChecked,
-            onChanged: (oldValue) async {
-              setState(() => widget.task.isChecked = !widget.task.isChecked);
-              await DBProvider.db.updateTask(widget.task);
+            value: task.isChecked,
+            onChanged: (oldValue) {
+              task.isChecked = !task.isChecked;
+              context.read<TasksBloc>().add(UpdateTask(task: task));
             },
           ),
         ],
