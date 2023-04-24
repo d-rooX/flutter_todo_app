@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:nyava_ui/bloc/bloc_exports.dart';
+import 'package:flutter_todo_app/bloc/bloc_exports.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class TaskCalendar extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:nyava_ui/bloc/bloc_exports.dart';
+import 'package:flutter_todo_app/bloc/bloc_exports.dart';
+import 'package:flutter_todo_app/db/models/task.dart';
 
-import '../../db/models/task.dart';
 import 'bg_icon.dart';
 
 class TaskItem extends StatelessWidget {

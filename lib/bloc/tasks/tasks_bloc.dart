@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:nyava_ui/db/database.dart';
+import 'package:flutter_todo_app/db/database.dart';
 
 import '../../db/models/task.dart';
 

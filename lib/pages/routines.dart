@@ -3,11 +3,11 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:nyava_ui/bloc/bloc_exports.dart';
-import 'package:nyava_ui/pages/widgets/create_new_task_dialog.dart';
-import 'package:nyava_ui/pages/widgets/section.dart';
-import 'package:nyava_ui/pages/widgets/task_calendar.dart';
-import 'package:nyava_ui/pages/widgets/task_item.dart';
+import 'package:flutter_todo_app/bloc/bloc_exports.dart';
+import 'package:flutter_todo_app/pages/widgets/create_new_task_dialog.dart';
+import 'package:flutter_todo_app/pages/widgets/section.dart';
+import 'package:flutter_todo_app/pages/widgets/task_calendar.dart';
+import 'package:flutter_todo_app/pages/widgets/task_item.dart';
 
 class RoutinesPage extends StatelessWidget {
   const RoutinesPage({Key? key}) : super(key: key);

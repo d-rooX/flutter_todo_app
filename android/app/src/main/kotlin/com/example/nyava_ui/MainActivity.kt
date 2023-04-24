@@ -1,4 +1,4 @@
-package com.example.nyava_ui
+package com.example.flutter_todo_app
 
 import io.flutter.embedding.android.FlutterActivity
 

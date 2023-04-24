@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.nyava_ui">
+    package="com.example.flutter_todo_app">
    <application
-        android:label="nyava_ui"
+        android:label="flutter_todo_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

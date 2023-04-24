@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:nyava_ui/db/models/task.dart';
+import 'package:flutter_todo_app/db/models/task.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 

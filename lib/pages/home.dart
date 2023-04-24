@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:nyava_ui/pages/widgets/home.dart';
-import 'package:nyava_ui/pages/widgets/routine_item.dart';
-import 'package:nyava_ui/pages/widgets/section.dart';
-import 'package:nyava_ui/pages/widgets/task_item.dart';
+import 'package:flutter_todo_app/pages/widgets/home.dart';
+import 'package:flutter_todo_app/pages/widgets/routine_item.dart';
+import 'package:flutter_todo_app/pages/widgets/section.dart';
+import 'package:flutter_todo_app/pages/widgets/task_item.dart';
 
-import './routines.dart';
+import 'routines.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);

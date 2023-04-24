@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nyava_ui/pages/home.dart';
+import 'package:flutter_todo_app/pages/home.dart';
 
 import 'bloc/bloc_exports.dart';
 
