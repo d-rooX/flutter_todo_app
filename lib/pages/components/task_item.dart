@@ -1,45 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:nyava_ui/db/database.dart';
 
-class Section extends StatelessWidget {
-  const Section({Key? key, required this.title, required this.child, this.onSeeAll})
-      : super(key: key);
-  final String title;
-  final Widget child;
-  final GestureTapCallback? onSeeAll;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(25),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-              ),
-              if (onSeeAll != null)
-                GestureDetector(
-                  onTap: onSeeAll,
-                  child: const Text(
-                    "See All",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.orange,
-                    ),
-                  ),
-                )
-            ],
-          ),
-        ),
-        child
-      ],
-    );
-  }
-}
+import '../../db/models/task.dart';
+import 'bg_icon.dart';
 
 class TaskItem extends StatelessWidget {
   const TaskItem({Key? key, required this.title, required this.taskCount, required this.color})
@@ -95,17 +58,14 @@ class TaskItem extends StatelessWidget {
 }
 
 class RoundedTaskItem extends StatefulWidget {
-  const RoundedTaskItem({Key? key, required this.emoji, required this.title}) : super(key: key);
-  final String emoji;
-  final String title;
+  const RoundedTaskItem(this.task, {Key? key}) : super(key: key);
+  final Task task;
 
   @override
   State<RoundedTaskItem> createState() => _RoundedTaskItemState();
 }
 
 class _RoundedTaskItemState extends State<RoundedTaskItem> {
-  bool isChecked = false;
-
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
@@ -114,7 +74,7 @@ class _RoundedTaskItemState extends State<RoundedTaskItem> {
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.symmetric(horizontal: 15),
       decoration: BoxDecoration(
-        color: isChecked ? Colors.grey.shade300 : Colors.white,
+        color: widget.task.isChecked ? Colors.grey.shade300 : Colors.white,
         borderRadius: BorderRadius.circular(25),
       ),
       child: Row(
@@ -122,43 +82,25 @@ class _RoundedTaskItemState extends State<RoundedTaskItem> {
           BackgroundIcon(
             color: Colors.grey.shade200,
             child: Text(
-              widget.emoji,
+              widget.task.emoji,
               style: const TextStyle(fontSize: 20),
             ),
           ),
           Text(
-            widget.title,
-            style: TextStyle(color: isChecked ? Colors.grey.shade500 : Colors.black),
+            widget.task.title,
+            style: TextStyle(color: widget.task.isChecked ? Colors.grey.shade500 : Colors.black),
           ),
           const Spacer(),
           Checkbox(
             activeColor: Colors.orange,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-            value: isChecked,
-            onChanged: (oldValue) => setState(() => isChecked = !isChecked),
+            value: widget.task.isChecked,
+            onChanged: (oldValue) async {
+              setState(() => widget.task.isChecked = !widget.task.isChecked);
+              await DBProvider.db.updateTask(widget.task);
+            },
           ),
         ],
-      ),
-    );
-  }
-}
-
-class BackgroundIcon extends StatelessWidget {
-  const BackgroundIcon({Key? key, required this.color, required this.child}) : super(key: key);
-  final Color color;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(right: 15),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(7),
-        child: child,
       ),
     );
   }

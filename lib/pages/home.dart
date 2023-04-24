@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import './routines.dart';
-import '../components/common.dart';
-import '../components/home.dart';
+import 'components/home.dart';
+import 'components/routine_item.dart';
+import 'components/section.dart';
+import 'components/task_item.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
