@@ -17,8 +17,8 @@ class TaskDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TasksBloc bloc = context.read<TasksBloc>();
     int selectedEmojiIndex = task != null ? emojis.indexOf(task!.emoji) : -1;
-    DateTime date = context.read<TasksBloc>().state.selectedDay ?? DateTime.now();
     TextEditingController titleController = TextEditingController(text: task?.title);
 
     return AlertDialog(
@@ -68,16 +68,16 @@ class TaskDialog extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     String selectedEmoji =
-                        selectedEmojiIndex == -1 ? '' : emojis[selectedEmojiIndex];
-                    DateTime day = DateTime(date.year, date.month, date.day);
-                    TasksBloc bloc = context.read<TasksBloc>();
+                        selectedEmojiIndex == -1 ? '📝' : emojis[selectedEmojiIndex];
 
                     if (isEdit) {
                       bloc.add(UpdateTask(
-                        task: Task(titleController.text, selectedEmoji, day, id: task!.id),
+                        task: Task(titleController.text, selectedEmoji, bloc.state.selectedDay,
+                            id: task!.id),
                       ));
                     } else {
-                      Task newTask = Task(titleController.text, selectedEmoji, day);
+                      Task newTask =
+                          Task(titleController.text, selectedEmoji, bloc.state.selectedDay);
                       bloc.add(AddTask(task: newTask));
                     }
 

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_todo_app/datetime_extension.dart';
 import 'package:flutter_todo_app/db/database.dart';
 
 import '../../db/models/task.dart';
@@ -10,7 +11,7 @@ part 'tasks_event.dart';
 part 'tasks_state.dart';
 
 class TasksBloc extends Bloc<TasksEvent, TasksState> {
-  TasksBloc() : super(const TasksState()) {
+  TasksBloc() : super(TasksState(selectedDay: DateTime.now().dayOnly, tasksList: const {})) {
     on<AddTask>(_onAddTask);
     on<DeleteTask>(_onDeleteTask);
     on<UpdateTask>(_onUpdateTask);
@@ -24,22 +25,22 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
 
   void _onRefreshTasks(RefreshTasks event, Emitter<TasksState> emit) async {
     log("REFRESHED DB");
-    Map<int, List<Task>> tasksList = await DBProvider.db.getAllTasks();
-    emit(TasksState(tasksList: tasksList, selectedDay: event.date));
+    Map<DateTime, List<Task>> tasksList = await DBProvider.db.getAllTasks();
+    emit(TasksState(tasksList: tasksList, selectedDay: state.selectedDay));
   }
 
   void _onAddTask(AddTask event, Emitter<TasksState> emit) async {
     await DBProvider.db.createTask(event.task);
-    add(RefreshTasks(date: state.selectedDay));
+    add(const RefreshTasks());
   }
 
   void _onDeleteTask(DeleteTask event, Emitter<TasksState> emit) async {
     await DBProvider.db.deleteTask(event.task);
-    add(RefreshTasks(date: state.selectedDay));
+    add(const RefreshTasks());
   }
 
   void _onUpdateTask(UpdateTask event, Emitter<TasksState> emit) async {
     await DBProvider.db.updateTask(event.task);
-    add(RefreshTasks(date: state.selectedDay));
+    add(const RefreshTasks());
   }
 }

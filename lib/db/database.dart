@@ -46,14 +46,14 @@ class DBProvider {
     return tasksMaps.map((taskMap) => Task.fromMap(taskMap)).toList();
   }
 
-  Future<Map<int, List<Task>>> getAllTasks() async {
+  Future<Map<DateTime, List<Task>>> getAllTasks() async {
     final Database db = await getDatabase();
     final List<Map<String, dynamic>> tasks = await db.query('tasks');
-    final List<Task> models = tasks.map((e) => Task.fromMap(e)).toList();
-    final Map<int, List<Task>> dateSortedTasks = {};
+    final List<Task> models = tasks.map(Task.fromMap).toList();
+    final Map<DateTime, List<Task>> dateSortedTasks = {};
 
     for (Task task in models) {
-      dateSortedTasks.putIfAbsent(task.date.millisecondsSinceEpoch, () => []).add(task);
+      dateSortedTasks.putIfAbsent(task.date, () => []).add(task);
     }
     return dateSortedTasks;
   }

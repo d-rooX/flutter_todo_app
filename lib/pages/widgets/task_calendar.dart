@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/bloc/bloc_exports.dart';
+import 'package:flutter_todo_app/datetime_extension.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -11,17 +12,15 @@ class TaskCalendar extends StatefulWidget {
 }
 
 class _TaskCalendarState extends State<TaskCalendar> {
-  DateTime _focusedDate = DateTime.now();
-  DateTime? _selectedDate;
+  late DateTime _focusedDate;
+  late DateTime _selectedDate;
 
   @override
   Widget build(BuildContext context) {
     TasksBloc bloc = context.read<TasksBloc>();
 
-    if (_selectedDate == null) {
-      _focusedDate = bloc.state.selectedDay ?? DateTime.now();
-      _selectedDate = _focusedDate;
-    }
+    _focusedDate = bloc.state.selectedDay;
+    _selectedDate = bloc.state.selectedDay;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 25),
@@ -32,8 +31,9 @@ class _TaskCalendarState extends State<TaskCalendar> {
       ),
       child: TableCalendar(
         eventLoader: (day) {
-          if (day.isAtSameMomentAs(_selectedDate!)) return [];
-          return bloc.state.tasksList?[day.millisecondsSinceEpoch] ?? [];
+          day = day.dayOnly;
+          if (day.isAtSameMomentAs(_selectedDate)) return [];
+          return bloc.state.tasksList[day] ?? [];
         },
         headerStyle: const HeaderStyle(
           headerPadding: EdgeInsets.only(bottom: 5),
@@ -76,8 +76,8 @@ class _TaskCalendarState extends State<TaskCalendar> {
         onDaySelected: (selectedDay, focusedDay) {
           setState(() {
             _selectedDate = selectedDay;
-            _focusedDate = focusedDay; // update `_focusedDay` here as well
-            bloc.add(ChangeSelectedDay(date: selectedDay));
+            _focusedDate = focusedDay;
+            bloc.add(ChangeSelectedDay(date: _selectedDate.dayOnly));
           });
         },
         focusedDay: _focusedDate,

@@ -65,65 +65,68 @@ class RoundedTaskItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Slidable(
-      endActionPane: ActionPane(
-        motion: const StretchMotion(),
-        children: [
-          SlidableAction(
-            borderRadius: BorderRadius.circular(15),
-            onPressed: (context) => {
-              showDialog(
-                context: context,
-                builder: (context) => TaskDialog(title: "Edit task", isEdit: true, task: task),
-              )
-            },
-            backgroundColor: Colors.orangeAccent,
-            icon: Icons.edit,
-            foregroundColor: Colors.white,
-          ),
-          SlidableAction(
-            borderRadius: BorderRadius.circular(15),
-            onPressed: (context) => context.read<TasksBloc>().add(DeleteTask(task: task)),
-            backgroundColor: Colors.red,
-            icon: Icons.delete,
-          ),
-        ],
-      ),
-      child: AnimatedContainer(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        height: 80,
-        duration: const Duration(milliseconds: 200),
-        decoration: BoxDecoration(
-          color: task.isChecked ? Colors.grey.shade300 : Colors.white,
-          borderRadius: BorderRadius.circular(25),
-        ),
-        child: Row(
+    return Container(
+      margin: const EdgeInsets.only(bottom: 15),
+      child: Slidable(
+        endActionPane: ActionPane(
+          motion: const StretchMotion(),
           children: [
-            BackgroundIcon(
-              color: Colors.grey.shade200,
-              child: Text(
-                task.emoji,
-                style: const TextStyle(fontSize: 20),
-              ),
-            ),
-            Expanded(
-              child: Text(
-                task.title,
-                overflow: TextOverflow.fade,
-                softWrap: false,
-                style: TextStyle(color: task.isChecked ? Colors.grey.shade500 : Colors.black),
-              ),
-            ),
-            Checkbox(
-              activeColor: Colors.orange,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-              value: task.isChecked,
-              onChanged: (oldValue) {
-                task.isChecked = !task.isChecked;
-                context.read<TasksBloc>().add(UpdateTask(task: task));
+            SlidableAction(
+              borderRadius: BorderRadius.circular(15),
+              onPressed: (context) => {
+                showDialog(
+                  context: context,
+                  builder: (context) => TaskDialog(title: "Edit task", isEdit: true, task: task),
+                )
               },
+              backgroundColor: Colors.orangeAccent,
+              icon: Icons.edit,
+              foregroundColor: Colors.white,
+            ),
+            SlidableAction(
+              borderRadius: BorderRadius.circular(15),
+              onPressed: (context) => context.read<TasksBloc>().add(DeleteTask(task: task)),
+              backgroundColor: Colors.red,
+              icon: Icons.delete,
             ),
           ],
+        ),
+        child: AnimatedContainer(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          height: 80,
+          duration: const Duration(milliseconds: 200),
+          decoration: BoxDecoration(
+            color: task.isChecked ? Colors.grey.shade300 : Colors.white,
+            borderRadius: BorderRadius.circular(25),
+          ),
+          child: Row(
+            children: [
+              BackgroundIcon(
+                color: Colors.grey.shade200,
+                child: Text(
+                  task.emoji,
+                  style: const TextStyle(fontSize: 20),
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  task.title,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                  style: TextStyle(color: task.isChecked ? Colors.grey.shade500 : Colors.black),
+                ),
+              ),
+              Checkbox(
+                activeColor: Colors.orange,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                value: task.isChecked,
+                onChanged: (oldValue) {
+                  task.isChecked = !task.isChecked;
+                  context.read<TasksBloc>().add(UpdateTask(task: task));
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

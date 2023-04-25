@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_todo_app/pages/home.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'bloc/bloc_exports.dart';
 
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => TasksBloc()..add(RefreshTasks(date: DateTime.now())),
+      create: (context) => TasksBloc()..add(const RefreshTasks()),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

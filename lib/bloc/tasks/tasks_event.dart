@@ -32,11 +32,10 @@ class DeleteTask extends TasksEvent {
 }
 
 class RefreshTasks extends TasksEvent {
-  final DateTime? date;
-  const RefreshTasks({required this.date});
+  const RefreshTasks();
 
   @override
-  List<Object?> get props => [date];
+  List<Object?> get props => [];
 }
 
 class ChangeSelectedDay extends TasksEvent {

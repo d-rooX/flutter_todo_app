@@ -20,24 +20,14 @@ class RoutinesPage extends StatelessWidget {
   }
 
   List<Widget> getTasksWidgets(TasksState state) {
-    if (state.tasksList == null) {
-      return [
-        const Padding(
-          padding: EdgeInsets.only(top: 25),
-          child: CircularProgressIndicator(),
-        )
-      ];
-    }
-    List<Widget> tasks = (state.tasksList![state.selectedDay?.millisecondsSinceEpoch] ?? [])
+    List<Widget> tasks = (state.tasksList[state.selectedDay] ?? [])
         .map<Widget>((task) => RoundedTaskItem(key: ValueKey("Task${task.id}}"), task))
         .toList();
-
     if (tasks.isEmpty) {
       return [
         Center(child: Text("No tasks yet...", style: TextStyle(color: Colors.grey.shade500)))
       ];
     }
-
     return tasks..add(const SizedBox(height: 70));
   }
 
