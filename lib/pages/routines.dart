@@ -4,9 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_todo_app/bloc/bloc_exports.dart';
-import 'package:flutter_todo_app/pages/widgets/dialogs.dart';
 import 'package:flutter_todo_app/pages/widgets/section.dart';
 import 'package:flutter_todo_app/pages/widgets/task_calendar.dart';
+import 'package:flutter_todo_app/pages/widgets/task_dialog.dart';
 import 'package:flutter_todo_app/pages/widgets/task_item.dart';
 
 class RoutinesPage extends StatelessWidget {
