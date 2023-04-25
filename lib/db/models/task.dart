@@ -7,6 +7,7 @@ class Task {
 
   // constructors
   Task(this.title, this.emoji, this.date, {this.id, this.isChecked = false});
+
   Task.fromMap(Map<String, dynamic> map)
       : id = map['id'],
         title = map['title'],

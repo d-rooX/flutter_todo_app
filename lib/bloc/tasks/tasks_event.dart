@@ -9,6 +9,7 @@ abstract class TasksEvent extends Equatable {
 
 class AddTask extends TasksEvent {
   final Task task;
+
   AddTask({required this.task});
 
   @override
@@ -17,6 +18,7 @@ class AddTask extends TasksEvent {
 
 class UpdateTask extends TasksEvent {
   final Task task;
+
   UpdateTask({required this.task});
 
   @override
@@ -25,6 +27,7 @@ class UpdateTask extends TasksEvent {
 
 class DeleteTask extends TasksEvent {
   final Task task;
+
   DeleteTask({required this.task});
 
   @override
@@ -33,6 +36,7 @@ class DeleteTask extends TasksEvent {
 
 class RefreshTasks extends TasksEvent {
   final DateTime? date;
+
   RefreshTasks({required this.date});
 
   @override

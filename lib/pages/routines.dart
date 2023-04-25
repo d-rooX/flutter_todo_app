@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_todo_app/bloc/bloc_exports.dart';
-import 'package:flutter_todo_app/pages/widgets/create_new_task_dialog.dart';
+import 'package:flutter_todo_app/pages/widgets/dialogs.dart';
 import 'package:flutter_todo_app/pages/widgets/section.dart';
 import 'package:flutter_todo_app/pages/widgets/task_calendar.dart';
 import 'package:flutter_todo_app/pages/widgets/task_item.dart';
@@ -15,7 +15,7 @@ class RoutinesPage extends StatelessWidget {
   void createNewTask(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => CreateNewTaskDialog(),
+      builder: (context) => const TaskDialog(title: "Create task"),
     );
   }
 
@@ -28,7 +28,10 @@ class RoutinesPage extends StatelessWidget {
         )
       ];
     }
-    return state.tasksList!.map((task) => RoundedTaskItem(task)).toList();
+    return state.tasksList!
+        .map<Widget>((task) => RoundedTaskItem(key: ValueKey("Task${task.id}}"), task))
+        .toList()
+      ..add(const SizedBox(height: 70));
   }
 
   @override

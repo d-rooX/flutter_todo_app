@@ -25,7 +25,10 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
     add(RefreshTasks(date: state.selectedDay));
   }
 
-  void _onDeleteTask(DeleteTask event, Emitter<TasksState> emit) {}
+  void _onDeleteTask(DeleteTask event, Emitter<TasksState> emit) async {
+    await DBProvider.db.deleteTask(event.task);
+    add(RefreshTasks(date: state.selectedDay));
+  }
 
   void _onUpdateTask(UpdateTask event, Emitter<TasksState> emit) async {
     await DBProvider.db.updateTask(event.task);
