@@ -19,7 +19,7 @@ class RoutinesPage extends StatelessWidget {
     );
   }
 
-  List<Widget> getTasksViews(TasksState state) {
+  List<Widget> getTasksWidgets(TasksState state) {
     if (state.tasksList == null) {
       return [
         const Padding(
@@ -28,10 +28,17 @@ class RoutinesPage extends StatelessWidget {
         )
       ];
     }
-    return state.tasksList!
+    List<Widget> tasks = (state.tasksList![state.selectedDay?.millisecondsSinceEpoch] ?? [])
         .map<Widget>((task) => RoundedTaskItem(key: ValueKey("Task${task.id}}"), task))
-        .toList()
-      ..add(const SizedBox(height: 70));
+        .toList();
+
+    if (tasks.isEmpty) {
+      return [
+        Center(child: Text("No tasks yet...", style: TextStyle(color: Colors.grey.shade500)))
+      ];
+    }
+
+    return tasks..add(const SizedBox(height: 70));
   }
 
   @override
@@ -73,18 +80,16 @@ class RoutinesPage extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         children: [
           const TaskCalendar(),
-          BlocBuilder<TasksBloc, TasksState>(
-            builder: (context, state) {
-              return Section(
-                title: "Today Tasks",
-                // onSeeAll: () {},
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Column(children: getTasksViews(state)),
-                ),
-              );
-            },
-          )
+          Section(
+            title: "Today Tasks",
+            // onSeeAll: () {},
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: BlocBuilder<TasksBloc, TasksState>(
+                builder: (context, state) => Column(children: getTasksWidgets(state)),
+              ),
+            ),
+          ),
         ],
       ),
     );

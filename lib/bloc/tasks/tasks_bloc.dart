@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_todo_app/db/database.dart';
@@ -13,10 +15,16 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
     on<DeleteTask>(_onDeleteTask);
     on<UpdateTask>(_onUpdateTask);
     on<RefreshTasks>(_onRefreshTasks);
+    on<ChangeSelectedDay>(_onChangeSelectedDay);
+  }
+
+  void _onChangeSelectedDay(ChangeSelectedDay event, Emitter<TasksState> emit) {
+    emit(TasksState(tasksList: state.tasksList, selectedDay: event.date));
   }
 
   void _onRefreshTasks(RefreshTasks event, Emitter<TasksState> emit) async {
-    List<Task> tasksList = await DBProvider.db.getTasks(event.date ?? DateTime.now());
+    log("REFRESHED DB");
+    Map<int, List<Task>> tasksList = await DBProvider.db.getAllTasks();
     emit(TasksState(tasksList: tasksList, selectedDay: event.date));
   }
 
