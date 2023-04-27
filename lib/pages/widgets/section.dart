@@ -5,7 +5,7 @@ class Section extends StatelessWidget {
       {Key? key,
       required this.title,
       required this.child,
-      this.buttonName = 'SeeAll',
+      this.buttonName = 'See All',
       this.onButtonTap})
       : super(key: key);
   final String title;

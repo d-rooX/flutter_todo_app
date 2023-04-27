@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter_todo_app/db/models/task.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:tuple/tuple.dart';
 
 import 'models/project.dart';
 
@@ -74,12 +73,11 @@ class DBProvider {
     return models;
   }
 
-  Future<Tuple2<Project, List<Task>>> getProject(int project_id) async {
+  Future<Project> getProject(int project_id) async {
     final Database db = await getDatabase();
     final Project proj = Project.fromMap(
         (await db.query('projects', where: 'id=?', whereArgs: [project_id])).single);
-    final List<Task> tasks = await getProjectTasks(project_id);
-    return Tuple2(proj, tasks);
+    return proj;
   }
 
   // CREATE

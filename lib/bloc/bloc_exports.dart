@@ -1,3 +1,4 @@
 export 'package:flutter_bloc/flutter_bloc.dart';
 
+export './projects/projects_bloc.dart';
 export './tasks/tasks_bloc.dart';

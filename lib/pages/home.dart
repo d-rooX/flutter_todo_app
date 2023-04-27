@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/bloc/bloc_exports.dart';
-import 'package:flutter_todo_app/bloc/projects/projects_bloc.dart';
-import 'package:flutter_todo_app/db/database.dart';
+import 'package:flutter_todo_app/pages/projects.dart';
 import 'package:flutter_todo_app/pages/widgets/home.dart';
 import 'package:flutter_todo_app/pages/widgets/project_item.dart';
 import 'package:flutter_todo_app/pages/widgets/section.dart';
 import 'package:flutter_todo_app/pages/widgets/task_item.dart';
-import 'package:page_transition/page_transition.dart';
 
-import '../db/models/project.dart';
+import '../transitions.dart';
 import 'tasks.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
-  Widget getProjectsViews(BuildContext context, ProjectsState state) {
+  Widget getProjectsView(BuildContext context, ProjectsState state) {
     if (state.projectsList.isEmpty) {
       return Center(
         child: Text(
@@ -23,20 +21,21 @@ class HomePage extends StatelessWidget {
         ),
       );
     }
+    const double padding = 20;
+    List<Widget> projectsWithPadding = [
+      const SizedBox(width: padding),
+      ...state.projectsList.map((project) => ProjectThumb(project: project)),
+      const SizedBox(width: padding),
+    ];
+
     return ListView.separated(
       physics: const BouncingScrollPhysics(),
       scrollDirection: Axis.horizontal,
-      itemBuilder: (context, index) => state.projectsList.isEmpty
-          ? Text("No projects yet...")
-          : ProjectItem(project: state.projectsList[index]),
-      itemCount: state.projectsList.length,
+      itemBuilder: (context, index) => projectsWithPadding[index],
+      itemCount: projectsWithPadding.length,
       separatorBuilder: (context, index) => const SizedBox(width: 15),
     );
   }
-
-  // void showCreateProjectDialog(BuildContext context) {
-  //   showDialog(context: context, builder: (context) => const ProjectDialog());
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -73,29 +72,16 @@ class HomePage extends StatelessWidget {
             ),
             Section(
               title: "Projects",
-              buttonName: "Create",
-              // onButtonTap: () => showCreateProjectDialog(context),
-              onButtonTap: () async {
-                Project newProject = Project(emoji: '💩', title: 'New Project!');
-                await DBProvider.db.createProject(newProject);
-                context.read<ProjectsBloc>().add(RefreshProjects());
-              },
+              onButtonTap: () =>
+                  Navigator.of(context).push(defaultTransition(const ProjectsPage())),
               child: SizedBox(
                 height: 160,
-                child: BlocBuilder<ProjectsBloc, ProjectsState>(builder: getProjectsViews),
+                child: BlocBuilder<ProjectsBloc, ProjectsState>(builder: getProjectsView),
               ),
             ),
             Section(
               title: "My Tasks",
-              onButtonTap: () {
-                Navigator.of(context).push(PageTransition(
-                  child: const RoutinesPage(),
-                  type: PageTransitionType.fade,
-                  alignment: Alignment.center,
-                  duration: Duration(milliseconds: 500),
-                  reverseDuration: Duration(milliseconds: 500),
-                ));
-              },
+              onButtonTap: () => Navigator.of(context).push(defaultTransition(const TasksPage())),
               child: Column(
                 children: const [
                   TaskItem(

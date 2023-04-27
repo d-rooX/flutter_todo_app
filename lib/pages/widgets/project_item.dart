@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../db/models/project.dart';
 
-class ProjectItem extends StatelessWidget {
-  const ProjectItem({Key? key, required this.project}) : super(key: key);
+class ProjectThumb extends StatelessWidget {
+  const ProjectThumb({Key? key, required this.project}) : super(key: key);
   final Project project;
   final double progress = 0.5;
 
@@ -66,6 +66,41 @@ class ProjectItem extends StatelessWidget {
             backgroundColor: Colors.grey.shade400,
             value: progress,
             minHeight: 5,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ProjectItem extends StatelessWidget {
+  const ProjectItem({Key? key, required this.project}) : super(key: key);
+  final Project project;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 150,
+      padding: EdgeInsets.all(25),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Text(
+                project.title,
+                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              ),
+              Spacer(),
+              // todo: List<Task> in Project model
+              // Text(project.tasks!.length.toString()),
+              const CircularProgressIndicator(
+                value: 0.5,
+              )
+            ],
           ),
         ],
       ),

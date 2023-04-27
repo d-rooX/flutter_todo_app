@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/bloc/projects/projects_bloc.dart';
 import 'package:flutter_todo_app/pages/home.dart';
 import 'package:google_fonts/google_fonts.dart';
 

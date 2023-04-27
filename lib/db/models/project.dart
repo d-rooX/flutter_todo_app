@@ -1,8 +1,11 @@
+import 'package:flutter_todo_app/db/models/task.dart';
+
 class Project {
   int? id;
   String title;
   String emoji;
   DateTime? deadline;
+  List<Task>? tasks; // resolves in DBProvider.getTask method
 
   Project({this.id, required this.title, required this.emoji, this.deadline});
 
