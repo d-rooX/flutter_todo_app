@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class RoutineItem extends StatelessWidget {
-  const RoutineItem({Key? key, required this.emoji, required this.title, required this.progress})
-      : super(key: key);
-  final String emoji;
-  final String title;
-  final double progress;
+import '../../db/models/project.dart';
+
+class ProjectItem extends StatelessWidget {
+  const ProjectItem({Key? key, required this.project}) : super(key: key);
+  final Project project;
+  final double progress = 0.5;
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +28,12 @@ class RoutineItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             child: Text(
-              emoji,
+              project.emoji,
               style: const TextStyle(fontSize: 20),
             ),
           ),
           Text(
-            title,
+            project.title,
             style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.bold,

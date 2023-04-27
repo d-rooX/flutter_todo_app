@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter_todo_app/db/models/task.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:tuple/tuple.dart';
+
+import 'models/project.dart';
 
 class DBProvider {
   DBProvider._();
@@ -22,34 +25,33 @@ class DBProvider {
   }
 
   void _createDB(Database db, int version) async {
+    await db.execute("PRAGMA foreign_keys = ON;");
+    await db.execute(
+      'CREATE TABLE projects('
+      'id INTEGER PRIMARY KEY AUTOINCREMENT,'
+      'title TEXT NOT NULL,'
+      'emoji TEXT NOT NULL,'
+      'deadline INTEGER'
+      ')',
+    );
     await db.execute(
       'CREATE TABLE tasks('
       'id INTEGER PRIMARY KEY AUTOINCREMENT,'
       'title TEXT NOT NULL,'
       'emoji TEXT NOT NULL,'
       'date INTEGER,'
-      'isChecked INTEGER NOT NULL'
+      'isChecked INTEGER NOT NULL,'
+      'project_id INTEGER,'
+      'FOREIGN KEY(project_id) REFERENCES projects(id)'
       ')',
     );
   }
 
-  DateTime toDate(DateTime dateTime) => DateTime(dateTime.year, dateTime.month, dateTime.day);
-
   // READ
-  Future<List<Task>> getTasksAtDay(DateTime date) async {
-    final Database db = await getDatabase();
-    final List<Map<String, dynamic>> tasksMaps = await db.query(
-      'tasks',
-      where: "date=?",
-      whereArgs: [toDate(date).millisecondsSinceEpoch],
-    );
-    return tasksMaps.map((taskMap) => Task.fromMap(taskMap)).toList();
-  }
-
-  Future<Map<DateTime, List<Task>>> getAllTasks() async {
+  Future<Map<DateTime, List<Task>>> getTasks() async {
     final Database db = await getDatabase();
     final List<Map<String, dynamic>> tasks = await db.query('tasks');
-    final List<Task> models = tasks.map(Task.fromMap).toList();
+    final List<Task> models = tasks.map(Task.fromMap).toList(growable: false);
     final Map<DateTime, List<Task>> dateSortedTasks = {};
 
     for (Task task in models) {
@@ -58,11 +60,39 @@ class DBProvider {
     return dateSortedTasks;
   }
 
+  Future<List<Task>> getProjectTasks(int project_id) async {
+    final Database db = await getDatabase();
+    final List<Map<String, dynamic>> tasksMaps =
+        await db.query('tasks', where: 'project_id=?', whereArgs: [project_id]);
+    return tasksMaps.map(Task.fromMap).toList();
+  }
+
+  Future<List<Project>> getProjects() async {
+    final Database db = await getDatabase();
+    final List<Map<String, dynamic>> projects = await db.query('projects');
+    final List<Project> models = projects.map(Project.fromMap).toList(growable: false);
+    return models;
+  }
+
+  Future<Tuple2<Project, List<Task>>> getProject(int project_id) async {
+    final Database db = await getDatabase();
+    final Project proj = Project.fromMap(
+        (await db.query('projects', where: 'id=?', whereArgs: [project_id])).single);
+    final List<Task> tasks = await getProjectTasks(project_id);
+    return Tuple2(proj, tasks);
+  }
+
   // CREATE
   Future<Task> createTask(Task task) async {
     final Database db = await getDatabase();
     task.id = await db.insert('tasks', task.toMap());
     return task;
+  }
+
+  Future<Project> createProject(Project project) async {
+    final Database db = await getDatabase();
+    project.id = await db.insert('projects', project.toMap());
+    return project;
   }
 
   // UPDATE

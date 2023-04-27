@@ -41,6 +41,8 @@ dependencies:
   flutter_bloc: any
   equatable: any
   flutter_slidable: any
+  page_transition: any
+  tuple: ^2.0.1
 
 dev_dependencies:
   flutter_test:

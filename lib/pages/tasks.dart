@@ -12,7 +12,7 @@ import 'package:flutter_todo_app/pages/widgets/task_item.dart';
 class RoutinesPage extends StatelessWidget {
   const RoutinesPage({Key? key}) : super(key: key);
 
-  void createNewTask(BuildContext context) {
+  void showCreateTaskDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) => const TaskDialog(title: "Create task"),
@@ -63,7 +63,7 @@ class RoutinesPage extends StatelessWidget {
         shadowColor: Colors.white.withAlpha(50),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => createNewTask(context),
+        onPressed: () => showCreateTaskDialog(context),
         child: const Icon(Icons.add, color: Colors.white),
       ),
       body: ListView(
