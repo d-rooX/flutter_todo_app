@@ -9,9 +9,14 @@ class ProjectsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.grey.shade200,
       extendBodyBehindAppBar: true,
       appBar: BlurAppBar.blur(context, "Projects"),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () { context.read<ProjectsBloc>().state.projectsList },
+      //   child: Icon(Icons.add),
+      // ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25),
         child: BlocBuilder<ProjectsBloc, ProjectsState>(

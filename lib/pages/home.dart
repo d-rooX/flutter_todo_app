@@ -40,6 +40,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.grey.shade200,
       bottomNavigationBar: SizedBox(
         height: 77,
@@ -74,6 +75,16 @@ class HomePage extends StatelessWidget {
               title: "Projects",
               onButtonTap: () =>
                   Navigator.of(context).push(defaultTransition(const ProjectsPage())),
+              // context.read<ProjectsBloc>().add(
+              //       AddProject(
+              //         project: Project(
+              //           title: "Shitty proj",
+              //           emoji: "💩",
+              //           deadline: DateTime.now().add(const Duration(days: 2)),
+              //         ),
+              //       ),
+              //     );
+              // },
               child: SizedBox(
                 height: 160,
                 child: BlocBuilder<ProjectsBloc, ProjectsState>(builder: getProjectsView),

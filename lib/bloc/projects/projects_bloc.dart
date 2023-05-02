@@ -13,12 +13,12 @@ class ProjectsBloc extends Bloc<ProjectsEvent, ProjectsState> {
   }
 
   void _onRefreshProjects(RefreshProjects event, Emitter<ProjectsState> emit) async {
-    List<Project> projects = await DBProvider.db.getProjects();
+    List<Project> projects = await Project.getAll(await DBProvider.db);
     emit(ProjectsState(projectsList: projects));
   }
 
   void _onAddProject(AddProject event, Emitter<ProjectsState> emit) async {
-    await DBProvider.db.createProject(event.project);
+    await event.project.create(await DBProvider.db);
     add(const RefreshProjects());
   }
 }

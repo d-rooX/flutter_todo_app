@@ -95,11 +95,8 @@ class ProjectItem extends StatelessWidget {
                 style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
               ),
               Spacer(),
-              // todo: List<Task> in Project model
-              // Text(project.tasks!.length.toString()),
-              const CircularProgressIndicator(
-                value: 0.5,
-              )
+              Text("${project.tasks.doneCount}/${project.tasks.length.toString()}"),
+              CircularProgressIndicator(value: project.tasks.donePercent)
             ],
           ),
         ],

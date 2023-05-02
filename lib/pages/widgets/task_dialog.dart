@@ -20,12 +20,14 @@ class TaskDialog extends StatelessWidget {
     TasksBloc bloc = context.read<TasksBloc>();
     int selectedEmojiIndex = task != null ? emojis.indexOf(task!.emoji) : -1;
     TextEditingController titleController = TextEditingController(text: task?.title);
+    int? project_id;
+    // todo project selection
 
     return AlertDialog(
       title: Text(title),
       backgroundColor: Colors.white,
       content: SizedBox(
-        height: 200,
+        height: 280,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -53,6 +55,24 @@ class TaskDialog extends StatelessWidget {
                   ),
                 ),
               ),
+            ),
+            DropdownMenu(
+              menuHeight: 200,
+              inputDecorationTheme: InputDecorationTheme(),
+              enableSearch: false,
+              onSelected: (int? value) => task?.project_id = value ?? task.project_id,
+              dropdownMenuEntries: context
+                  .read<ProjectsBloc>()
+                  .state
+                  .projectsList
+                  .map(
+                    (e) => DropdownMenuEntry(
+                      label: e.title,
+                      value: e.id,
+                      leadingIcon: Icon(Icons.checklist),
+                    ),
+                  )
+                  .toList(growable: false),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
