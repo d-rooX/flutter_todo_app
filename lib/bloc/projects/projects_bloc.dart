@@ -7,12 +7,13 @@ part 'projects_event.dart';
 part 'projects_state.dart';
 
 class ProjectsBloc extends Bloc<ProjectsEvent, ProjectsState> {
-  ProjectsBloc() : super(ProjectsState(projectsList: [])) {
+  ProjectsBloc() : super(const ProjectsState(projectsList: [])) {
     on<RefreshProjects>(_onRefreshProjects);
     on<AddProject>(_onAddProject);
   }
 
-  void _onRefreshProjects(RefreshProjects event, Emitter<ProjectsState> emit) async {
+  void _onRefreshProjects(
+      RefreshProjects event, Emitter<ProjectsState> emit) async {
     List<Project> projects = await Project.getAll(await DBProvider.db);
     emit(ProjectsState(projectsList: projects));
   }

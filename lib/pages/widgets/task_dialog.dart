@@ -9,7 +9,8 @@ final List<String> emojis =
         .split(' ');
 
 class TaskDialog extends StatelessWidget {
-  const TaskDialog({Key? key, required this.title, this.isEdit = false, this.task})
+  const TaskDialog(
+      {Key? key, required this.title, this.isEdit = false, this.task})
       : super(key: key);
   final String title;
   final bool isEdit;
@@ -19,9 +20,9 @@ class TaskDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     TasksBloc bloc = context.read<TasksBloc>();
     int selectedEmojiIndex = task != null ? emojis.indexOf(task!.emoji) : -1;
-    TextEditingController titleController = TextEditingController(text: task?.title);
-    int? project_id;
-    // todo project selection
+    TextEditingController titleController =
+        TextEditingController(text: task?.title);
+    int? projectId;
 
     return AlertDialog(
       title: Text(title),
@@ -49,27 +50,30 @@ class TaskDialog extends StatelessWidget {
                   itemBuilder: (context, index) => GestureDetector(
                     onTap: () => setState(() => selectedEmojiIndex = index),
                     child: BackgroundIcon(
-                      color: index == selectedEmojiIndex ? Colors.orange : Colors.grey.shade200,
-                      child: Text(emojis[index], style: const TextStyle(fontSize: 22)),
+                      color: index == selectedEmojiIndex
+                          ? Colors.orange
+                          : Colors.grey.shade200,
+                      child: Text(emojis[index],
+                          style: const TextStyle(fontSize: 22)),
                     ),
                   ),
                 ),
               ),
             ),
             DropdownMenu(
-              menuHeight: 200,
-              inputDecorationTheme: InputDecorationTheme(),
+              onSelected: (value) => projectId = value,
+              enableFilter: false,
               enableSearch: false,
-              onSelected: (int? value) => task?.project_id = value ?? task.project_id,
+              menuHeight: 200,
               dropdownMenuEntries: context
                   .read<ProjectsBloc>()
                   .state
                   .projectsList
                   .map(
                     (e) => DropdownMenuEntry(
-                      label: e.title,
                       value: e.id,
-                      leadingIcon: Icon(Icons.checklist),
+                      label: e.title,
+                      leadingIcon: Text(e.emoji),
                     ),
                   )
                   .toList(growable: false),
@@ -87,18 +91,35 @@ class TaskDialog extends StatelessWidget {
                   ),
                 ElevatedButton(
                   onPressed: () {
-                    String selectedEmoji =
-                        selectedEmojiIndex == -1 ? '📝' : emojis[selectedEmojiIndex];
+                    String selectedEmoji = selectedEmojiIndex == -1
+                        ? '📝'
+                        : emojis[selectedEmojiIndex];
 
                     if (isEdit) {
                       bloc.add(UpdateTask(
-                        task: Task(titleController.text, selectedEmoji, bloc.state.selectedDay,
-                            id: task!.id),
+                        task: Task(
+                          titleController.text,
+                          selectedEmoji,
+                          bloc.state.selectedDay,
+                          project_id: projectId,
+                          id: task!.id,
+                        ),
                       ));
                     } else {
-                      Task newTask =
-                          Task(titleController.text, selectedEmoji, bloc.state.selectedDay);
-                      bloc.add(AddTask(task: newTask));
+                      bloc.add(
+                        AddTask(
+                          task: Task(
+                            titleController.text,
+                            selectedEmoji,
+                            bloc.state.selectedDay,
+                            project_id: projectId,
+                          ),
+                        ),
+                      );
+                    }
+
+                    if (projectId != null) {
+                      context.read<ProjectsBloc>().add(const RefreshProjects());
                     }
 
                     Navigator.pop(context);

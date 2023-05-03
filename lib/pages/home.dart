@@ -6,6 +6,7 @@ import 'package:flutter_todo_app/pages/widgets/project_item.dart';
 import 'package:flutter_todo_app/pages/widgets/section.dart';
 import 'package:flutter_todo_app/pages/widgets/task_item.dart';
 
+import '../db/models/project.dart';
 import '../transitions.dart';
 import 'tasks.dart';
 
@@ -53,7 +54,8 @@ class HomePage extends StatelessWidget {
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: ''),
             BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: ''),
-            BottomNavigationBarItem(icon: Icon(Icons.dashboard_rounded), label: ''),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.dashboard_rounded), label: ''),
             BottomNavigationBarItem(icon: Icon(Icons.settings), label: ''),
           ],
         ),
@@ -73,26 +75,29 @@ class HomePage extends StatelessWidget {
             ),
             Section(
               title: "Projects",
-              onButtonTap: () =>
-                  Navigator.of(context).push(defaultTransition(const ProjectsPage())),
+              onButtonTap: () => Navigator.of(context)
+                  .push(defaultTransition(const ProjectsPage())),
               // context.read<ProjectsBloc>().add(
               //       AddProject(
               //         project: Project(
               //           title: "Shitty proj",
               //           emoji: "💩",
-              //           deadline: DateTime.now().add(const Duration(days: 2)),
+              //           deadline: DateTime.now().add(
+              //             const Duration(days: 2),
+              //           ),
               //         ),
               //       ),
-              //     );
-              // },
+              //     ),
               child: SizedBox(
                 height: 160,
-                child: BlocBuilder<ProjectsBloc, ProjectsState>(builder: getProjectsView),
+                child: BlocBuilder<ProjectsBloc, ProjectsState>(
+                    builder: getProjectsView),
               ),
             ),
             Section(
               title: "My Tasks",
-              onButtonTap: () => Navigator.of(context).push(defaultTransition(const TasksPage())),
+              onButtonTap: () => Navigator.of(context)
+                  .push(defaultTransition(const TasksPage())),
               child: Column(
                 children: const [
                   TaskItem(

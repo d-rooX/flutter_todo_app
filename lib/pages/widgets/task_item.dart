@@ -7,7 +7,11 @@ import 'package:flutter_todo_app/pages/widgets/task_dialog.dart';
 import 'bg_icon.dart';
 
 class TaskItem extends StatelessWidget {
-  const TaskItem({Key? key, required this.title, required this.taskCount, required this.color})
+  const TaskItem(
+      {Key? key,
+      required this.title,
+      required this.taskCount,
+      required this.color})
       : super(key: key);
 
   final Color color;
@@ -65,6 +69,9 @@ class RoundedTaskItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TasksBloc tasksBloc = context.read<TasksBloc>();
+    ProjectsBloc projectsBloc = context.read<ProjectsBloc>();
+
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       child: Slidable(
@@ -76,7 +83,11 @@ class RoundedTaskItem extends StatelessWidget {
               onPressed: (context) => {
                 showDialog(
                   context: context,
-                  builder: (context) => TaskDialog(title: "Edit task", isEdit: true, task: task),
+                  builder: (context) => TaskDialog(
+                    title: "Edit task",
+                    isEdit: true,
+                    task: task,
+                  ),
                 )
               },
               backgroundColor: Colors.orangeAccent,
@@ -85,7 +96,12 @@ class RoundedTaskItem extends StatelessWidget {
             ),
             SlidableAction(
               borderRadius: BorderRadius.circular(15),
-              onPressed: (context) => context.read<TasksBloc>().add(DeleteTask(task: task)),
+              onPressed: (context) {
+                tasksBloc.add(DeleteTask(task: task));
+                if (task.project_id != null) {
+                  projectsBloc.add(const RefreshProjects());
+                }
+              },
               backgroundColor: Colors.red,
               icon: Icons.delete,
             ),
@@ -113,16 +129,21 @@ class RoundedTaskItem extends StatelessWidget {
                   task.title,
                   overflow: TextOverflow.fade,
                   softWrap: false,
-                  style: TextStyle(color: task.isChecked ? Colors.grey.shade500 : Colors.black),
+                  style: TextStyle(
+                    color: task.isChecked ? Colors.grey.shade500 : Colors.black,
+                  ),
                 ),
               ),
               Checkbox(
                 activeColor: Colors.orange,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4),
+                ),
                 value: task.isChecked,
                 onChanged: (oldValue) {
                   task.isChecked = !task.isChecked;
-                  context.read<TasksBloc>().add(UpdateTask(task: task));
+                  tasksBloc.add(UpdateTask(task: task));
+                  projectsBloc.add(const RefreshProjects());
                 },
               ),
             ],
