@@ -7,11 +7,7 @@ import 'package:flutter_todo_app/pages/widgets/task_dialog.dart';
 import 'bg_icon.dart';
 
 class TaskItem extends StatelessWidget {
-  const TaskItem(
-      {Key? key,
-      required this.title,
-      required this.taskCount,
-      required this.color})
+  const TaskItem({Key? key, required this.title, required this.taskCount, required this.color})
       : super(key: key);
 
   final Color color;
@@ -98,7 +94,7 @@ class RoundedTaskItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(15),
               onPressed: (context) {
                 tasksBloc.add(DeleteTask(task: task));
-                if (task.project_id != null) {
+                if (task.projectID != null) {
                   projectsBloc.add(const RefreshProjects());
                 }
               },

@@ -13,7 +13,8 @@ class Project {
       : id = map['id'],
         title = map['title'],
         emoji = map['emoji'],
-        deadline = DateTime.fromMillisecondsSinceEpoch(map['deadline'] ?? 0);
+        deadline =
+            map['deadline'] != null ? DateTime.fromMillisecondsSinceEpoch(map['deadline']) : null;
 
   Map<String, dynamic> toMap() {
     final map = <String, dynamic>{};
@@ -48,23 +49,40 @@ class Project {
     return models;
   }
 
-  static Future<Project> getSingle(final Database db, int project_id) async {
-    final Project proj = Project.fromMap(
-        (await db.query('projects', where: 'id=?', whereArgs: [project_id])).single);
+  static Future<Project> getSingle(final Database db, int projectID) async {
+    final Project proj =
+        Project.fromMap((await db.query('projects', where: 'id=?', whereArgs: [projectID])).single);
     await proj._getTasks(db);
     return proj;
+  }
+
+  Future<int> update(final Database db) async {
+    return await db.update(
+      'projects',
+      toMap(),
+      where: 'id=?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<int> delete(final Database db) async {
+    return await db.delete(
+      'projects',
+      where: 'id=?',
+      whereArgs: [id],
+    );
   }
 }
 
 extension TasksList on List<Task> {
   double get donePercent {
-    return this.fold<double>(0.0, (previousValue, element) {
-      return previousValue + (element.isChecked ? 100 / this.length : 0.0);
+    return fold<double>(0.0, (previousValue, element) {
+      return previousValue + (element.isChecked ? 100 / length : 0.0);
     });
   }
 
   int get doneCount {
-    return this.fold(0, (previousValue, element) {
+    return fold(0, (previousValue, element) {
       return previousValue + (element.isChecked ? 1 : 0);
     });
   }

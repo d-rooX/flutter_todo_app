@@ -6,17 +6,17 @@ class Task {
   String emoji;
   DateTime date;
   bool isChecked;
-  int? project_id;
+  int? projectID;
 
   // constructors
-  Task(this.title, this.emoji, this.date, {this.id, this.project_id, this.isChecked = false});
+  Task(this.title, this.emoji, this.date, {this.id, this.projectID, this.isChecked = false});
 
   Task.fromMap(Map<String, dynamic> map)
       : id = map['id'],
         title = map['title'],
         emoji = map['emoji'],
         date = DateTime.fromMillisecondsSinceEpoch(map['date']),
-        project_id = map['project_id'],
+        projectID = map['project_id'],
         isChecked = map['isChecked'] == 1;
 
   Map<String, dynamic> toMap() {
@@ -25,7 +25,7 @@ class Task {
     map['title'] = title;
     map['emoji'] = emoji;
     map['date'] = date.millisecondsSinceEpoch;
-    map['project_id'] = project_id;
+    map['project_id'] = projectID;
     map['isChecked'] = isChecked ? 1 : 0;
     return map;
   }

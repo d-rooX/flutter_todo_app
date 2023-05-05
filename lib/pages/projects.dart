@@ -31,8 +31,7 @@ class ProjectsPage extends StatelessWidget {
           builder: (context, state) => ListView.separated(
             physics: const BouncingScrollPhysics(),
             itemCount: state.projectsList.length,
-            itemBuilder: (context, index) =>
-                ProjectItem(project: state.projectsList[index]),
+            itemBuilder: (context, index) => ProjectItem(project: state.projectsList[index]),
             separatorBuilder: (context, index) => const SizedBox(height: 20),
           ),
         ),

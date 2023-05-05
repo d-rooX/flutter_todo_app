@@ -2,33 +2,46 @@ import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/bloc/bloc_exports.dart';
 import 'package:flutter_todo_app/db/models/task.dart';
 
-import 'bg_icon.dart';
+import 'emoji_selector.dart';
 
-final List<String> emojis =
-    "😀 😃 😄 😁 😆 😅 😂 🤣 🥲 ☺️ 😊 😇 🙂 🙃 😉 😌 😍 🥰 😘 😗 😙 😚 😋 😛 😝 😜 🤪 🤨 🧐 🤓 😎 🥸 🤩 🥳 😏 😒 😞 😔 😟 😕 🙁 😣 😖 😫 😩 🥺 😢 😭 😤 😠 😡 🤬 🤯 😳 🥵 🥶 😱 😨 😰 😥 😓 🫣 🤗 🫡 🤔 🫢 🤭 🤫 🤥 😶 😶‍🌫️ 😐 😑 😬 🫨 🫠 🙄 😯 😦 😧 😮 😲 🥱 😴 🤤 😪 😵"
-        .split(' ');
-
-class TaskDialog extends StatelessWidget {
-  const TaskDialog(
-      {Key? key, required this.title, this.isEdit = false, this.task})
+class TaskDialog extends StatefulWidget {
+  const TaskDialog({Key? key, required this.title, this.isEdit = false, this.task})
       : super(key: key);
   final String title;
   final bool isEdit;
   final Task? task;
 
   @override
-  Widget build(BuildContext context) {
-    TasksBloc bloc = context.read<TasksBloc>();
-    int selectedEmojiIndex = task != null ? emojis.indexOf(task!.emoji) : -1;
-    TextEditingController titleController =
-        TextEditingController(text: task?.title);
-    int? projectId;
+  State<TaskDialog> createState() => _TaskDialogState();
+}
 
+class _TaskDialogState extends State<TaskDialog> {
+  late final TasksBloc tasksBloc;
+  late final ProjectsBloc projectsBloc;
+  late final TextEditingController titleController;
+
+  int? projectID;
+  String? emoji;
+
+  @override
+  void initState() {
+    super.initState();
+
+    tasksBloc = context.read<TasksBloc>();
+    projectsBloc = context.read<ProjectsBloc>();
+    titleController = TextEditingController(text: widget.task?.title);
+
+    emoji = widget.task?.emoji;
+    projectID = widget.task?.projectID;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(title),
+      title: Text(widget.title),
       backgroundColor: Colors.white,
       content: SizedBox(
-        height: 280,
+        height: 250,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -38,50 +51,24 @@ class TaskDialog extends StatelessWidget {
               decoration: const InputDecoration(label: Text("Name")),
               autofocus: true,
             ),
-            SizedBox(
-              height: 38,
-              width: double
-                  .maxFinite, // fixme: strange bug. it raises error unless specified on emulator 4a
-              child: StatefulBuilder(
-                builder: (context, setState) => ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: emojis.length,
-                  itemBuilder: (context, index) => GestureDetector(
-                    onTap: () => setState(() => selectedEmojiIndex = index),
-                    child: BackgroundIcon(
-                      color: index == selectedEmojiIndex
-                          ? Colors.orange
-                          : Colors.grey.shade200,
-                      child: Text(emojis[index],
-                          style: const TextStyle(fontSize: 22)),
-                    ),
-                  ),
-                ),
+            const SizedBox(height: 25),
+            EmojiSelector(
+              initialEmoji: emoji,
+              onChange: (newEmoji) => emoji = newEmoji,
+            ),
+            if (projectsBloc.state.projectsList.isNotEmpty)
+              DropdownButton(
+                value: projectID,
+                onChanged: (value) => setState(() => projectID = value),
+                items: projectsBloc.state.projectsList
+                    .map((e) => DropdownMenuItem(value: e.id, child: Text(e.title)))
+                    .toList(growable: false),
               ),
-            ),
-            DropdownMenu(
-              onSelected: (value) => projectId = value,
-              enableFilter: false,
-              enableSearch: false,
-              menuHeight: 200,
-              dropdownMenuEntries: context
-                  .read<ProjectsBloc>()
-                  .state
-                  .projectsList
-                  .map(
-                    (e) => DropdownMenuEntry(
-                      value: e.id,
-                      label: e.title,
-                      leadingIcon: Text(e.emoji),
-                    ),
-                  )
-                  .toList(growable: false),
-            ),
+            const Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (isEdit)
+                if (widget.isEdit)
                   ElevatedButton(
                     onPressed: () {},
                     child: const Text(
@@ -91,34 +78,31 @@ class TaskDialog extends StatelessWidget {
                   ),
                 ElevatedButton(
                   onPressed: () {
-                    String selectedEmoji = selectedEmojiIndex == -1
-                        ? '📝'
-                        : emojis[selectedEmojiIndex];
-
-                    if (isEdit) {
-                      bloc.add(UpdateTask(
+                    emoji ??= '📝';
+                    if (widget.isEdit) {
+                      tasksBloc.add(UpdateTask(
                         task: Task(
                           titleController.text,
-                          selectedEmoji,
-                          bloc.state.selectedDay,
-                          project_id: projectId,
-                          id: task!.id,
+                          emoji!,
+                          tasksBloc.state.selectedDay,
+                          projectID: projectID,
+                          id: widget.task!.id,
                         ),
                       ));
                     } else {
-                      bloc.add(
+                      tasksBloc.add(
                         AddTask(
                           task: Task(
                             titleController.text,
-                            selectedEmoji,
-                            bloc.state.selectedDay,
-                            project_id: projectId,
+                            emoji!,
+                            tasksBloc.state.selectedDay,
+                            projectID: projectID,
                           ),
                         ),
                       );
                     }
 
-                    if (projectId != null) {
+                    if (projectID != null) {
                       context.read<ProjectsBloc>().add(const RefreshProjects());
                     }
 

@@ -10,12 +10,7 @@ class DBProvider {
 
   static Future<Database> _getDB() async {
     Directory dir = await getApplicationDocumentsDirectory();
-    String path = '${dir.path}/tasks.db';
-    try {
-      File(path).delete();
-    } catch (error) {
-      log("EXCEPTION $error");
-    }
+    String path = '${dir.path}/tasks1.db';
     _database = await openDatabase(path, version: 1, onCreate: _createDB);
     return _database!;
   }
