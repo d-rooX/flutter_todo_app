@@ -13,8 +13,8 @@ class DBProvider {
     String path = '${dir.path}/tasks.db';
     try {
       File(path).delete();
-    } on PathNotFoundException {
-      log("NOT FOUND EXCEPTION");
+    } catch (error) {
+      log("EXCEPTION $error");
     }
     _database = await openDatabase(path, version: 1, onCreate: _createDB);
     return _database!;

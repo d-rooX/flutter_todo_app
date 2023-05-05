@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/bloc/bloc_exports.dart';
 import 'package:flutter_todo_app/pages/widgets/appbar.dart' show BlurAppBar;
+import 'package:flutter_todo_app/pages/widgets/project_dialog.dart';
 import 'package:flutter_todo_app/pages/widgets/project_item.dart';
 
 class ProjectsPage extends StatelessWidget {
   const ProjectsPage({Key? key}) : super(key: key);
+
+  void showCreateProjectDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => const ProjectDialog(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +22,7 @@ class ProjectsPage extends StatelessWidget {
       extendBodyBehindAppBar: true,
       appBar: BlurAppBar.blur(context, "Projects"),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => showCreateProjectDialog(context),
         child: const Icon(Icons.add, color: Colors.white),
       ),
       body: Padding(
