@@ -31,18 +31,19 @@ dependencies:
   flutter:
     sdk: flutter
 
+  animations: any
+  auto_size_text: ^3.0.0
   cupertino_icons: ^1.0.2
-  table_calendar: ^3.0.9
-  random_avatar: any
-  google_fonts: any
-  sqflite: any
-  path_provider: any
-  intl: any
-  flutter_bloc: any
   equatable: any
+  flutter_bloc: any
   flutter_slidable: any
+  google_fonts: any
+  intl: any
+  path_provider: any
   page_transition: any
-  tuple: ^2.0.1
+  random_avatar: any
+  sqflite: any
+  table_calendar: ^3.0.9
 
 dev_dependencies:
   flutter_test:

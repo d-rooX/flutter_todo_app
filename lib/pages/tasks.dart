@@ -16,18 +16,6 @@ class TasksPage extends StatelessWidget {
     );
   }
 
-  List<Widget> getTasksWidgets(TasksState state) {
-    List<Widget> tasks = (state.tasksList[state.selectedDay] ?? [])
-        .map<Widget>((task) => RoundedTaskItem(key: ValueKey("Task${task.id}}"), task))
-        .toList();
-    if (tasks.isEmpty) {
-      return [
-        Center(child: Text("No tasks yet...", style: TextStyle(color: Colors.grey.shade500)))
-      ];
-    }
-    return tasks..add(const SizedBox(height: 70));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,11 +32,12 @@ class TasksPage extends StatelessWidget {
           const TaskCalendar(),
           Section(
             title: "Today Tasks",
-            // onSeeAll: () {},
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: BlocBuilder<TasksBloc, TasksState>(
-                builder: (context, state) => Column(children: getTasksWidgets(state)),
+                builder: (context, state) => TasksList(
+                  tasksList: state.tasksList[state.selectedDay] ?? [],
+                ),
               ),
             ),
           ),

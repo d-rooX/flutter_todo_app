@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/bloc/bloc_exports.dart';
 import 'package:flutter_todo_app/pages/widgets/appbar.dart' show BlurAppBar;
@@ -26,12 +27,25 @@ class ProjectsPage extends StatelessWidget {
         child: const Icon(Icons.add, color: Colors.white),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25),
+        padding: const EdgeInsets.only(right: 25, left: 25, top: 25),
         child: BlocBuilder<ProjectsBloc, ProjectsState>(
           builder: (context, state) => ListView.separated(
             physics: const BouncingScrollPhysics(),
             itemCount: state.projectsList.length,
-            itemBuilder: (context, index) => ProjectItem(project: state.projectsList[index]),
+            itemBuilder: (context, index) => OpenContainer(
+              closedColor: Colors.transparent,
+              openColor: Colors.transparent,
+              middleColor: Colors.transparent,
+              transitionType: ContainerTransitionType.fade,
+              closedElevation: 0,
+              openElevation: 0,
+              closedBuilder: (context, action) => ProjectItem(
+                project: state.projectsList[index],
+              ),
+              openBuilder: (context, action) => ProjectPage(
+                project: state.projectsList[index],
+              ),
+            ),
             separatorBuilder: (context, index) => const SizedBox(height: 20),
           ),
         ),

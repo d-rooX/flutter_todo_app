@@ -74,7 +74,7 @@ class Project {
   }
 }
 
-extension TasksList on List<Task> {
+extension TasksListExtention on List<Task> {
   double get donePercent {
     return fold<double>(0.0, (previousValue, element) {
       return previousValue + (element.isChecked ? 100 / length : 0.0);

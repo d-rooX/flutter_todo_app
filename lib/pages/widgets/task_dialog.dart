@@ -80,15 +80,17 @@ class _TaskDialogState extends State<TaskDialog> {
                   onPressed: () {
                     emoji ??= '📝';
                     if (widget.isEdit) {
-                      tasksBloc.add(UpdateTask(
-                        task: Task(
-                          titleController.text,
-                          emoji!,
-                          tasksBloc.state.selectedDay,
-                          projectID: projectID,
-                          id: widget.task!.id,
+                      tasksBloc.add(
+                        UpdateTask(
+                          task: Task(
+                            titleController.text,
+                            emoji!,
+                            tasksBloc.state.selectedDay,
+                            projectID: projectID,
+                            id: widget.task!.id,
+                          ),
                         ),
-                      ));
+                      );
                     } else {
                       tasksBloc.add(
                         AddTask(
@@ -101,11 +103,7 @@ class _TaskDialogState extends State<TaskDialog> {
                         ),
                       );
                     }
-
-                    if (projectID != null) {
-                      context.read<ProjectsBloc>().add(const RefreshProjects());
-                    }
-
+                    context.read<ProjectsBloc>().add(const RefreshProjects());
                     Navigator.pop(context);
                   },
                   child: const Text(

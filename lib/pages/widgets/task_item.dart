@@ -94,9 +94,7 @@ class RoundedTaskItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(15),
               onPressed: (context) {
                 tasksBloc.add(DeleteTask(task: task));
-                if (task.projectID != null) {
-                  projectsBloc.add(const RefreshProjects());
-                }
+                projectsBloc.add(const RefreshProjects());
               },
               backgroundColor: Colors.red,
               icon: Icons.delete,
@@ -147,5 +145,41 @@ class RoundedTaskItem extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class TasksList extends StatelessWidget {
+  const TasksList({Key? key, required this.tasksList}) : super(key: key);
+  final List<Task> tasksList;
+
+  List<RoundedTaskItem> convertTasksToWidgets(List<Task> tasks) {
+    return tasks
+        .map(
+          (task) => RoundedTaskItem(
+            key: ValueKey("Task${task.id}}"),
+            task,
+          ),
+        )
+        .toList();
+  }
+
+  List<Widget> getTasksWidgets() {
+    List<Widget> tasksWidgets = convertTasksToWidgets(tasksList);
+    if (tasksWidgets.isEmpty) {
+      return [
+        Center(
+          child: Text(
+            "No tasks yet...",
+            style: TextStyle(color: Colors.grey.shade500),
+          ),
+        )
+      ];
+    }
+    return tasksWidgets;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: getTasksWidgets());
   }
 }

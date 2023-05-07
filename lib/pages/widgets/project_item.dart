@@ -1,8 +1,12 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_todo_app/bloc/bloc_exports.dart';
 import 'package:flutter_todo_app/datetime_extension.dart';
+import 'package:flutter_todo_app/pages/widgets/appbar.dart';
+import 'package:flutter_todo_app/pages/widgets/bg_icon.dart';
 import 'package:flutter_todo_app/pages/widgets/project_dialog.dart';
+import 'package:flutter_todo_app/pages/widgets/task_item.dart';
 
 import '../../db/models/project.dart';
 
@@ -16,7 +20,6 @@ class ProjectThumb extends StatelessWidget {
 
     return Container(
       width: 150,
-      height: 160,
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -25,20 +28,19 @@ class ProjectThumb extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            margin: const EdgeInsets.only(bottom: 8),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(10),
-            ),
+          BackgroundIcon(
+            color: Colors.grey.shade200,
             child: Text(
               project.emoji,
               style: const TextStyle(fontSize: 20),
             ),
           ),
-          Text(
+          const SizedBox(height: 7),
+          AutoSizeText(
             project.title,
+            maxLines: 2,
+            minFontSize: 10,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.bold,
@@ -79,8 +81,9 @@ class ProjectThumb extends StatelessWidget {
 }
 
 class ProjectItem extends StatelessWidget {
-  const ProjectItem({Key? key, required this.project}) : super(key: key);
+  const ProjectItem({Key? key, required this.project, this.isSlidable = true}) : super(key: key);
   final Project project;
+  final bool isSlidable;
 
   Text getDaysToComplete() {
     int? daysLeft = project.deadline?.dayOnly.difference(DateTime.now().dayOnly).inDays;
@@ -101,7 +104,6 @@ class ProjectItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ProjectsBloc projectsBloc = context.read<ProjectsBloc>();
     bool isDone = (project.tasks.donePercent ~/ 100) == 1;
 
     Widget progressIndicator = Stack(
@@ -109,7 +111,8 @@ class ProjectItem extends StatelessWidget {
       children: [
         if (isDone) ...[
           Container(
-            constraints: const BoxConstraints(minHeight: 36, minWidth: 36),
+            height: 38,
+            width: 38,
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.green,
@@ -121,7 +124,6 @@ class ProjectItem extends StatelessWidget {
             backgroundColor: Colors.grey,
           )
         ],
-
         if (isDone) ...[
           const Icon(Icons.done, color: Colors.white)
         ] else ...[
@@ -157,12 +159,17 @@ class ProjectItem extends StatelessWidget {
           ),
           SlidableAction(
             borderRadius: BorderRadius.circular(15),
-            onPressed: (context) => projectsBloc.add(DeleteProject(project: project)),
+            onPressed: (context) => context.read<ProjectsBloc>().add(
+                  DeleteProject(
+                    project: project,
+                  ),
+                ),
             backgroundColor: Colors.red,
             icon: Icons.delete,
           ),
         ],
       ),
+      enabled: isSlidable,
       child: Container(
         height: 150,
         padding: const EdgeInsets.all(25),
@@ -175,19 +182,25 @@ class ProjectItem extends StatelessWidget {
           children: [
             Row(
               children: [
-                Text(
-                  project.emoji,
-                  style: const TextStyle(fontSize: 24),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  project.title,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
+                BackgroundIcon(
+                  color: Colors.grey.shade200,
+                  child: Text(
+                    project.emoji,
+                    style: const TextStyle(fontSize: 22),
                   ),
                 ),
-                const Spacer(),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: AutoSizeText(
+                    project.title,
+                    maxLines: 2,
+                    maxFontSize: 19,
+                    minFontSize: 14,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(width: 8),
                 progressIndicator,
               ],
             ),
@@ -226,6 +239,38 @@ class ProjectItem extends StatelessWidget {
               ],
             )
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class ProjectPage extends StatelessWidget {
+  const ProjectPage({Key? key, required this.project}) : super(key: key);
+  final Project project;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: BlurAppBar.blur(context, project.title),
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: BlocBuilder<ProjectsBloc, ProjectsState>(
+          builder: (context, state) {
+            Project _project =
+                state.projectsList.where((element) => element.id == project.id).single;
+            return ListView(
+              physics: const BouncingScrollPhysics(),
+              children: [
+                ProjectItem(project: _project, isSlidable: false),
+                Padding(
+                  padding: const EdgeInsets.all(25),
+                  child: TasksList(tasksList: _project.tasks),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

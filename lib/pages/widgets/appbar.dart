@@ -29,7 +29,7 @@ extension BlurAppBar on AppBar {
       foregroundColor: Colors.black,
       centerTitle: true,
       elevation: 0,
-      scrolledUnderElevation: 8,
+      scrolledUnderElevation: 0,
       shadowColor: Colors.white.withAlpha(50),
     );
   }
