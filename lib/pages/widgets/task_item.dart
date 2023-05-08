@@ -152,15 +152,16 @@ class TasksList extends StatelessWidget {
   const TasksList({Key? key, required this.tasksList}) : super(key: key);
   final List<Task> tasksList;
 
-  List<RoundedTaskItem> convertTasksToWidgets(List<Task> tasks) {
+  List<Widget> convertTasksToWidgets(List<Task> tasks) {
     return tasks
-        .map(
+        .map<Widget>(
           (task) => RoundedTaskItem(
             key: ValueKey("Task${task.id}}"),
             task,
           ),
         )
-        .toList();
+        .toList()
+      ..add(const SizedBox(height: 60));
   }
 
   List<Widget> getTasksWidgets() {

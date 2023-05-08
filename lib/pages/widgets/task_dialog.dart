@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/bloc/bloc_exports.dart';
 import 'package:flutter_todo_app/db/models/task.dart';
 
+import '../../db/models/project.dart';
 import 'emoji_selector.dart';
 
 class TaskDialog extends StatefulWidget {
-  const TaskDialog({Key? key, required this.title, this.isEdit = false, this.task})
+  const TaskDialog({Key? key, required this.title, this.isEdit = false, this.task, this.project})
       : super(key: key);
   final String title;
   final bool isEdit;
   final Task? task;
+  final Project? project;
 
   @override
   State<TaskDialog> createState() => _TaskDialogState();
@@ -32,7 +34,7 @@ class _TaskDialogState extends State<TaskDialog> {
     titleController = TextEditingController(text: widget.task?.title);
 
     emoji = widget.task?.emoji;
-    projectID = widget.task?.projectID;
+    projectID = widget.project?.id ?? widget.task?.projectID;
   }
 
   @override
@@ -56,13 +58,18 @@ class _TaskDialogState extends State<TaskDialog> {
               initialEmoji: emoji,
               onChange: (newEmoji) => emoji = newEmoji,
             ),
-            if (projectsBloc.state.projectsList.isNotEmpty)
-              DropdownButton(
-                value: projectID,
-                onChanged: (value) => setState(() => projectID = value),
-                items: projectsBloc.state.projectsList
-                    .map((e) => DropdownMenuItem(value: e.id, child: Text(e.title)))
-                    .toList(growable: false),
+            if (projectsBloc.state.projectsList.isNotEmpty && widget.project == null)
+              Row(
+                children: [
+                  const Text("Project"),
+                  DropdownButton(
+                    value: projectID,
+                    onChanged: (value) => setState(() => projectID = value),
+                    items: projectsBloc.state.projectsList
+                        .map((e) => DropdownMenuItem(value: e.id, child: Text(e.title)))
+                        .toList(growable: false),
+                  ),
+                ],
               ),
             const Spacer(),
             Row(

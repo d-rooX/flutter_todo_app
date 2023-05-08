@@ -6,6 +6,7 @@ import 'package:flutter_todo_app/datetime_extension.dart';
 import 'package:flutter_todo_app/pages/widgets/appbar.dart';
 import 'package:flutter_todo_app/pages/widgets/bg_icon.dart';
 import 'package:flutter_todo_app/pages/widgets/project_dialog.dart';
+import 'package:flutter_todo_app/pages/widgets/task_dialog.dart';
 import 'package:flutter_todo_app/pages/widgets/task_item.dart';
 
 import '../../db/models/project.dart';
@@ -254,6 +255,13 @@ class ProjectPage extends StatelessWidget {
     return Scaffold(
       appBar: BlurAppBar.blur(context, project.title),
       extendBodyBehindAppBar: true,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => showDialog(
+          context: context,
+          builder: (context) => TaskDialog(title: "Create task", project: project),
+        ),
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: BlocBuilder<ProjectsBloc, ProjectsState>(

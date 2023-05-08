@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/bloc/bloc_exports.dart';
 import 'package:flutter_todo_app/pages/projects.dart';
@@ -6,7 +7,6 @@ import 'package:flutter_todo_app/pages/widgets/project_item.dart';
 import 'package:flutter_todo_app/pages/widgets/section.dart';
 import 'package:flutter_todo_app/pages/widgets/task_item.dart';
 
-import '../db/models/project.dart';
 import '../transitions.dart';
 import 'tasks.dart';
 
@@ -25,7 +25,18 @@ class HomePage extends StatelessWidget {
     const double padding = 20;
     List<Widget> projectsWithPadding = [
       const SizedBox(width: padding),
-      ...state.projectsList.map((project) => ProjectThumb(project: project)),
+      ...state.projectsList.map(
+        (project) => OpenContainer(
+          closedColor: Colors.transparent,
+          openColor: Colors.transparent,
+          middleColor: Colors.transparent,
+          transitionType: ContainerTransitionType.fade,
+          closedElevation: 0,
+          openElevation: 0,
+          closedBuilder: (context, action) => ProjectThumb(project: project),
+          openBuilder: (context, action) => ProjectPage(project: project),
+        ),
+      ),
       const SizedBox(width: padding),
     ];
 
@@ -54,8 +65,7 @@ class HomePage extends StatelessWidget {
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: ''),
             BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: ''),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.dashboard_rounded), label: ''),
+            BottomNavigationBarItem(icon: Icon(Icons.dashboard_rounded), label: ''),
             BottomNavigationBarItem(icon: Icon(Icons.settings), label: ''),
           ],
         ),
@@ -75,8 +85,8 @@ class HomePage extends StatelessWidget {
             ),
             Section(
               title: "Projects",
-              onButtonTap: () => Navigator.of(context)
-                  .push(defaultTransition(const ProjectsPage())),
+              onButtonTap: () =>
+                  Navigator.of(context).push(defaultTransition(const ProjectsPage())),
               // context.read<ProjectsBloc>().add(
               //       AddProject(
               //         project: Project(
@@ -90,14 +100,12 @@ class HomePage extends StatelessWidget {
               //     ),
               child: SizedBox(
                 height: 160,
-                child: BlocBuilder<ProjectsBloc, ProjectsState>(
-                    builder: getProjectsView),
+                child: BlocBuilder<ProjectsBloc, ProjectsState>(builder: getProjectsView),
               ),
             ),
             Section(
               title: "My Tasks",
-              onButtonTap: () => Navigator.of(context)
-                  .push(defaultTransition(const TasksPage())),
+              onButtonTap: () => Navigator.of(context).push(defaultTransition(const TasksPage())),
               child: Column(
                 children: const [
                   TaskItem(
