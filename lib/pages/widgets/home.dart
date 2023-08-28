@@ -24,7 +24,7 @@ class HomeHeader extends StatelessWidget {
               ),
             ),
             const Text(
-              "Nyava Hui",
+              "Big Bro",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
@@ -33,8 +33,8 @@ class HomeHeader extends StatelessWidget {
           ],
         ),
         const Spacer(),
-        Row(
-          children: const [
+        const Row(
+          children: [
             Icon(CupertinoIcons.bell, size: 30),
             SizedBox(width: 15),
             Icon(Icons.menu, size: 30),
